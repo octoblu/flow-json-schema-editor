@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import JsonSchemaForm from 'react-jsonschema-form'
 
+import { Message } from 'zooid-ui'
 export default class FlowJsonSchemaEditor extends Component {
 
   state = {
@@ -51,7 +52,6 @@ export default class FlowJsonSchemaEditor extends Component {
     const { error, nodeSchema, nodeData } = this.state
 
     let jsonSchemaForm = null
-
     if (nodeSchema && !error) {
       jsonSchemaForm = <JsonSchemaForm
         schema={nodeSchema}
@@ -59,7 +59,11 @@ export default class FlowJsonSchemaEditor extends Component {
         onChange={this.handleSchemaChange}/>
     }
 
+    let errorMessage = null
+    if (error) errorMessage = <Message type="error"><strong>Error:</strong> {error.message}</Message>
+
     return <div>
+      {errorMessage}
 
       <h3>Node Schema</h3>
       <textarea
