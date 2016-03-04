@@ -5,61 +5,85 @@ export default class FlowJsonSchemaEditor extends Component {
 
   state = {
     nodeNumber: null,
-    nodeSchema: {},
+    nodeSchema: null,
     flowData: {},
-    nodeData: {}
+    nodeData: {},
+    error: null
   }
 
-  handleChange = ({ target }) => {
+  handleSchemaFieldChange = ({ target }) => {
     const { name, value } = target
     const state = {}
 
     try {
       state[name] = JSON.parse(value);
-      this.setState(state)
+      state.error = null
     } catch(e) {
-      console.log('JSON parse failed at', e.message);
+      this.setState({error: e})
+      return;
     }
 
-    const { nodeNumber, flowData } = this.state
-
-    const currentNode = flowData.nodes[nodeNumber]
-    this.setState({nodeData: currentNode})
+    this.setState(state)
   }
 
-  handleSubmit = () => {
-    console.log('submitting')
+  handleNodeNumberFieldChange = ({ target }) => {
+    const { value } = target
+    const { flowData } = this.state
+
+    if (flowData) {
+      this.setState({
+        nodeNumber: value,
+        nodeData: flowData.nodes[value]
+      })
+    }
+  }
+
+  handleSchemaChange = ({ formData }) => {
+    this.setState({nodeData: formData}, () => {
+      const { flowData, nodeNumber } = this.state
+      const newFlowData = flowData
+      newFlowData.nodes[nodeNumber] = formData
+      this.setState({flowData: newFlowData})
+    })
   }
 
   render() {
-    const { nodeSchema, nodeData } = this.state
+    const { error, nodeSchema, nodeData } = this.state
+
+    let jsonSchemaForm = null
+
+    if (nodeSchema && !error) {
+      jsonSchemaForm = <JsonSchemaForm
+        schema={nodeSchema}
+        formData={nodeData}
+        onChange={this.handleSchemaChange}/>
+    }
 
     return <div>
 
-      <h1>Node Number</h1>
-      <input
-        name='nodeNumber'
-        onChange={this.handleChange}/>
-
-      <h1>Node Schema</h1>
+      <h3>Node Schema</h3>
       <textarea
         rows='10'
         cols='100'
         name='nodeSchema'
-        onChange={this.handleChange}/>
+        onChange={this.handleSchemaFieldChange}/>
 
-      <h1>Flow Data</h1>
+      <h3>Flow Data</h3>
       <textarea
         rows='10'
         cols='100'
         name='flowData'
-        onChange={this.handleChange}/>
+        onChange={this.handleSchemaFieldChange}
+        defaultValue={JSON.stringify(this.state.flowData)}
+        value={JSON.stringify(this.state.flowData)}/>
 
-      <h1>Schema Output</h1>
-      <JsonSchemaForm
-        schema={nodeSchema}
-        formData={nodeData}
-        onSubmit={this.handleSubmit}/>
+      <h3>Node Number</h3>
+      <input
+        name='nodeNumber'
+        onChange={this.handleNodeNumberFieldChange}/>
+
+      <h3>Schema Output</h3>
+      {jsonSchemaForm}
     </div>
   }
 }

@@ -1,10 +1,19 @@
 import React, { Component } from 'react'
 
+import 'zooid-ui/dist/style.css'
+
+import { TopBar, TopBarTitle } from 'zooid-ui'
+import { Page } from 'zooid-ui'
+
 export default class Layout extends Component {
   render() {
     return <div>
-      <h1>Flow-Json Schema Editor</h1>
-      {this.props.children}
+      <TopBar>
+        <TopBarTitle>Flow-Json Schema Editor</TopBarTitle>
+      </TopBar>
+      <Page>
+        {this.props.children}
+      </Page>
     </div>
   }
 }
