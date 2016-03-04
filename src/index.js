@@ -1,12 +1,14 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { Router, Route, browserHistory } from 'react-router'
+import { IndexRoute, Router, Route, browserHistory } from 'react-router'
 
 import Layout from './containers/layout'
+import FlowJsonSchemaEditor from './containers/flow-json-schema-editor'
 
-render((
+render(
   <Router history={browserHistory}>
     <Route path="/" component={Layout}>
+      <IndexRoute component={FlowJsonSchemaEditor}/>
     </Route>
   </Router>
-), document.getElementById('app'))
+, document.getElementById('app'))
