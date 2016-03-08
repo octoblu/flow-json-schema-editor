@@ -10,37 +10,38 @@ export default class FlowJsonSchemaEditor extends Component {
     request.get('http://localhost:3000/schemaRegistry.json', function(err, res){
       if (err) console.log(err)
       const parsedRes = JSON.parse(res.text)
-      self.setState({schemas: parsedRes})
+      self.setState({schemaList: parsedRes})
     });
   }
 
   state = {
-    nodeNumber: null,
     nodeSchema: null,
     flowData: {},
-    nodeData: {},
     error: null,
-    schemas: null
+    schemaList: null
   }
 
   handleSchemaFieldChange = ({ target }) => {
-    const { name, value } = target
+    const { value } = target
     const state = {}
 
     try {
-      state[name] = JSON.parse(value);
+      state.flowData = JSON.parse(value);
       state.error = null
     } catch(e) {
-      this.setState({error: e})
-      return;
+      this.error = e
     }
+
     this.setState(state, () => {
-      const array = []
+      const object = {}
+
       for (let i = 0; i < this.state.flowData.nodes.length; i++) {
         const schemaToLoad = this.state.flowData.nodes[i].class
-        array.push(this.state.schemas[schemaToLoad])
+        object[i] = this.state.schemaList[schemaToLoad]
       }
-      console.log(array);
+
+      const flowObject = { title: 'flowSchema', type: 'object', properties: object}
+      this.setState({nodeSchema: flowObject})
     })
   }
 
@@ -55,7 +56,7 @@ export default class FlowJsonSchemaEditor extends Component {
   //     }, () => {
   //       if (this.state.nodeNumber) {
   //         const schemaType = this.state.flowData.nodes[value].class
-  //         this.setState({nodeSchema: this.state.schemas[schemaType], error: null})
+  //         this.setState({nodeSchema: this.state.schemaList[schemaType], error: null})
   //       } else {
   //         this.setState({error: {message: 'No nodeNumber'}})
   //       }
@@ -63,23 +64,22 @@ export default class FlowJsonSchemaEditor extends Component {
   //   }
   // }
 
-  handleSchemaChange = ({ formData }) => {
-    this.setState({nodeData: formData}, () => {
-      const { flowData, nodeNumber } = this.state
-      const newFlowData = flowData
-      newFlowData.nodes[nodeNumber] = formData
-      this.setState({flowData: newFlowData})
-    })
-  }
+  // handleSchemaChange = ({ formData }) => {
+  //   this.setState({nodeData: formData}, () => {
+  //     const { flowData, nodeNumber } = this.state
+  //     const newFlowData = flowData
+  //     newFlowData.nodes[nodeNumber] = formData
+  //     this.setState({flowData: newFlowData})
+  //   })
+  // }
 
   render() {
-    const { error, nodeSchema, nodeData } = this.state
+    const { error, nodeSchema } = this.state
 
     let jsonSchemaForm = null
     if (nodeSchema && !error) {
       jsonSchemaForm = <JsonSchemaForm
         schema={nodeSchema}
-        formData={nodeData}
         onChange={this.handleSchemaChange}/>
     }
 
@@ -91,12 +91,11 @@ export default class FlowJsonSchemaEditor extends Component {
 
       <h3>Flow Data</h3>
       <textarea
-        rows='10'
+        rows='15'
         cols='100'
         name='flowData'
         onChange={this.handleSchemaFieldChange}
-        defaultValue={JSON.stringify(this.state.flowData)}
-        value={JSON.stringify(this.state.flowData)}/>
+        value={JSON.stringify(this.state.flowData, null, '\t')}/>
 
       <h3>Schema Output</h3>
       {jsonSchemaForm}
