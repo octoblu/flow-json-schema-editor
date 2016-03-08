@@ -1,6 +1,11 @@
 import React, { Component } from 'react'
 import JsonSchemaForm from 'react-jsonschema-form'
 import request from 'superagent'
+import brace from 'brace';
+import AceEditor from 'react-ace';
+
+import 'brace/mode/javascript';
+import 'brace/theme/github';
 
 import { Message } from 'zooid-ui'
 export default class FlowJsonSchemaEditor extends Component {
@@ -15,57 +20,39 @@ export default class FlowJsonSchemaEditor extends Component {
   }
 
   state = {
-    nodeSchema: null,
-    flowData: {},
-    error: null,
-    schemaList: null
+    schemaList: null,
+    flowData: '',
+    displaySchema: null,
+    schemaData: null,
+    error: null
   }
 
-  handleSchemaFieldChange = ({ target }) => {
-    const { value } = target
-    const state = {}
-
-    try {
-      state.flowData = JSON.parse(value);
-      state.error = null
-    } catch(e) {
-      this.error = e
-    }
-
-    this.setState(state, () => {
-      const object = {}
-
-      for (let i = 0; i < this.state.flowData.nodes.length; i++) {
-        const schemaToLoad = this.state.flowData.nodes[i].class
-        object[i] = this.state.schemaList[schemaToLoad]
-      }
-
-      const flowObject = { title: 'flowSchema', type: 'object', properties: object}
-      this.setState({nodeSchema: flowObject})
-    })
-  }
-
-  // handleNodeNumberFieldChange = ({ target }) => {
+  // handleSchemaFieldChange = ({ target }) => {
   //   const { value } = target
-  //   const { flowData } = this.state
+  //   const state = {}
   //
-  //   if (flowData) {
-  //     this.setState({
-  //       nodeNumber: value,
-  //       nodeData: flowData.nodes[value]
-  //     }, () => {
-  //       if (this.state.nodeNumber) {
-  //         const schemaType = this.state.flowData.nodes[value].class
-  //         this.setState({nodeSchema: this.state.schemaList[schemaType], error: null})
-  //       } else {
-  //         this.setState({error: {message: 'No nodeNumber'}})
-  //       }
-  //     })
+  //   try {
+  //     state.flowData = JSON.parse(value);
+  //     state.error = null
+  //   } catch(e) {
+  //     this.error = e
   //   }
+  //
+  //   this.setState(state, () => {
+  //     const object = {}
+  //
+  //     for (let i = 0; i < this.state.flowData.nodes.length; i++) {
+  //       const schemaToLoad = this.state.flowData.nodes[i].class
+  //       object[i] = this.state.schemaList[schemaToLoad]
+  //     }
+  //
+  //     const flowObject = { title: 'flowSchema', type: 'object', properties: object}
+  //     this.setState({displaySchema: flowObject})
+  //   })
   // }
 
   // handleSchemaChange = ({ formData }) => {
-  //   this.setState({nodeData: formData}, () => {
+  //   this.setState({schemaData: formData}, () => {
   //     const { flowData, nodeNumber } = this.state
   //     const newFlowData = flowData
   //     newFlowData.nodes[nodeNumber] = formData
@@ -73,13 +60,33 @@ export default class FlowJsonSchemaEditor extends Component {
   //   })
   // }
 
+  onFlowDataChange = (newValue) => {
+    this.setState({flowData: newValue})
+
+    try {
+      newValue = JSON.parse(newValue)
+      this.setState({error: null})
+    } catch (e) {
+      this.setState({error: e})
+      return;
+    }
+
+    const object = {}
+    for (let i = 0; i < newValue.nodes.length; i++) {
+      const schemaToLoad = newValue.nodes[i].class
+      object[i] = this.state.schemaList[schemaToLoad]
+    }
+    const flowObject = { title: 'flowSchema', type: 'object', properties: object}
+    this.setState({displaySchema: flowObject})
+  }
+
   render() {
-    const { error, nodeSchema } = this.state
+    const { flowData, displaySchema, schemaData, error } = this.state
 
     let jsonSchemaForm = null
-    if (nodeSchema && !error) {
+    if (displaySchema && !error) {
       jsonSchemaForm = <JsonSchemaForm
-        schema={nodeSchema}
+        schema={displaySchema}
         onChange={this.handleSchemaChange}/>
     }
 
@@ -90,12 +97,15 @@ export default class FlowJsonSchemaEditor extends Component {
       {errorMessage}
 
       <h3>Flow Data</h3>
-      <textarea
-        rows='15'
-        cols='100'
-        name='flowData'
-        onChange={this.handleSchemaFieldChange}
-        value={JSON.stringify(this.state.flowData, null, '\t')}/>
+      <AceEditor
+        mode="javascript"
+        theme="github"
+        onChange={this.onFlowDataChange}
+        name="flowData"
+        minLines={30}
+        width="900px"
+        value={flowData}
+      />
 
       <h3>Schema Output</h3>
       {jsonSchemaForm}
