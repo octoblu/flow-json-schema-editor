@@ -54,7 +54,7 @@ export default class FlowJsonSchemaEditor extends Component {
       listOfSchemasToLoad[i] = this.state.schemaList[schemaToLoad]
       schemaData[i] = newValue.nodes[i]
     }
-    const displaySchema = { title: 'flowSchema', type: 'object', properties: listOfSchemasToLoad}
+    const displaySchema = { title: newValue.name, type: 'object', properties: listOfSchemasToLoad}
 
     this.setState({displaySchema, schemaData})
   }
