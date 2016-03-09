@@ -27,6 +27,10 @@ export default class FlowJsonSchemaEditor extends Component {
     error: null
   }
 
+  handleSchemaChange = ({ formData }) => {
+    console.log('Form data: ', formData)
+  }
+
   // handleSchemaFieldChange = ({ target }) => {
   //   const { value } = target
   //   const state = {}
@@ -60,7 +64,7 @@ export default class FlowJsonSchemaEditor extends Component {
   //   })
   // }
 
-  onFlowDataChange = (newValue) => {
+  handleFlowDataChange = (newValue) => {
     this.setState({flowData: newValue})
 
     try {
@@ -71,13 +75,16 @@ export default class FlowJsonSchemaEditor extends Component {
       return;
     }
 
-    const object = {}
+    const listOfSchemasToLoad = {}
+    const schemaData = {}
     for (let i = 0; i < newValue.nodes.length; i++) {
       const schemaToLoad = newValue.nodes[i].class
-      object[i] = this.state.schemaList[schemaToLoad]
+      listOfSchemasToLoad[i] = this.state.schemaList[schemaToLoad]
+      schemaData[i] = newValue.nodes[i]
     }
-    const flowObject = { title: 'flowSchema', type: 'object', properties: object}
-    this.setState({displaySchema: flowObject})
+    const displaySchema = { title: 'flowSchema', type: 'object', properties: listOfSchemasToLoad}
+
+    this.setState({displaySchema, schemaData})
   }
 
   render() {
@@ -87,6 +94,7 @@ export default class FlowJsonSchemaEditor extends Component {
     if (displaySchema && !error) {
       jsonSchemaForm = <JsonSchemaForm
         schema={displaySchema}
+        formData={schemaData}
         onChange={this.handleSchemaChange}/>
     }
 
@@ -100,7 +108,7 @@ export default class FlowJsonSchemaEditor extends Component {
       <AceEditor
         mode="javascript"
         theme="github"
-        onChange={this.onFlowDataChange}
+        onChange={this.handleFlowDataChange}
         name="flowData"
         minLines={30}
         width="900px"
