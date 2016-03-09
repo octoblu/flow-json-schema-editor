@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import JsonSchemaForm from 'react-jsonschema-form'
 import request from 'superagent'
-import brace from 'brace';
-import AceEditor from 'react-ace';
+import brace from 'brace'
+import AceEditor from 'react-ace'
+import _ from 'lodash'
 
-import 'brace/mode/javascript';
-import 'brace/theme/github';
+import 'brace/mode/javascript'
+import 'brace/theme/github'
 
 import { Message } from 'zooid-ui'
 export default class FlowJsonSchemaEditor extends Component {
@@ -28,41 +29,12 @@ export default class FlowJsonSchemaEditor extends Component {
   }
 
   handleSchemaChange = ({ formData }) => {
-    console.log('Form data: ', formData)
+    const parsedFlowData = JSON.parse(this.state.flowData)
+    parsedFlowData.nodes = _.values(formData)
+    const updatedFlowData = JSON.stringify(parsedFlowData, null, 2)
+
+    this.handleFlowDataChange(updatedFlowData)
   }
-
-  // handleSchemaFieldChange = ({ target }) => {
-  //   const { value } = target
-  //   const state = {}
-  //
-  //   try {
-  //     state.flowData = JSON.parse(value);
-  //     state.error = null
-  //   } catch(e) {
-  //     this.error = e
-  //   }
-  //
-  //   this.setState(state, () => {
-  //     const object = {}
-  //
-  //     for (let i = 0; i < this.state.flowData.nodes.length; i++) {
-  //       const schemaToLoad = this.state.flowData.nodes[i].class
-  //       object[i] = this.state.schemaList[schemaToLoad]
-  //     }
-  //
-  //     const flowObject = { title: 'flowSchema', type: 'object', properties: object}
-  //     this.setState({displaySchema: flowObject})
-  //   })
-  // }
-
-  // handleSchemaChange = ({ formData }) => {
-  //   this.setState({schemaData: formData}, () => {
-  //     const { flowData, nodeNumber } = this.state
-  //     const newFlowData = flowData
-  //     newFlowData.nodes[nodeNumber] = formData
-  //     this.setState({flowData: newFlowData})
-  //   })
-  // }
 
   handleFlowDataChange = (newValue) => {
     this.setState({flowData: newValue})
@@ -113,6 +85,7 @@ export default class FlowJsonSchemaEditor extends Component {
         minLines={30}
         width="900px"
         value={flowData}
+        editorProps={{$blockScrolling: true}}
       />
 
       <h3>Schema Output</h3>
