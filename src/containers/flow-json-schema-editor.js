@@ -13,7 +13,7 @@ export default class FlowJsonSchemaEditor extends Component {
 
   componentDidMount() {
     var self = this
-    request.get('http://localhost:3000/schemaRegistry.json', function(err, res){
+    request.get('https://s3-us-west-2.amazonaws.com/tool-schema-registry/latest/schema-registry.json', function(err, res){
       if (err) console.log(err)
       const parsedRes = JSON.parse(res.text)
       self.setState({schemaList: parsedRes})
