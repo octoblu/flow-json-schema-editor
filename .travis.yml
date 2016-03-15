@@ -18,7 +18,7 @@ deploy:
   secret_access_key:
     secure: Dk121/EuZ6g2ccHV/8YWd/8/Q/qleAWj9J93ZvaCpRq//BSYJUafWO5tNZxGbrmMqtVJEhs155BaY9TgtFF5hMlhVQZwHSFQDAwic/mI5iP2UhFQlkttq7+xkxMCtBHp+BSBPIClXLRK1GeI9fT7o+62DAfjmBGBo6Ep+BGlTBI7JxA32nmE3oOabm+3d0Jgo0HAT+HVge4QjwpfHsgsrSZjeDBbpP6AxvInNl4f83l1sBq45Cgi7J0VmTv6kyGN5NtysO8VOXXrvBnkocr34mBHk1HjrkEECUFd/Q/BxKdAlgToVM66BsD/SBhlLcQkoGvVW5lZcZorz00wfoZJFP1bSNoqbiZ+E6IzayXyLLF3htB6HY4IM7QDqLwROWPcrUFCtdwqxbciXy4xJ3n/btkf6YBwHKhAy3QuHo4p/6dYxEvqLK+pF5xZtMGSpB//KswpZ7KCMThRbROUs+3NMStmVqj02ymMxdNiO/sTWVP+1f4C3elSqrM9mSweRZa9beKyH7HjBrpSV5RMqDTlOOxHbvRj3Tjh82YdewCudjW0GGAra/ldrYByq8sqfoaOTavXZBj/5HK0mjhaJ3OHk2aW9FKFe+TnzR58M+vVLfoYhFfNvr9NEU+HLnUGPwewAxtfYxH8KV99drdOjgOeP0C5mRCR7L3u93XNR5iJmFA=
   bucket: schema-editor.octoblu.com
-  region: us-west-2
+  region: us-west-1
   local-dir: deploy
   on:
     tags: true
