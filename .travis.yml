@@ -6,12 +6,10 @@ before_deploy:
 - webpack --config webpack.config.prod.js
 - mkdir -p deploy/latest
 - mkdir -p deploy/$TRAVIS_TAG
-- cp dist/bundle.js deploy/latest
-- cp dist/bundle.js.map deploy/latest
-- cp index.html deploy/latest
+- cp dist/bundle.js deploy/dist
+- cp dist/bundle.js.map deploy/dist
 - cp dist/bundle.js deploy/$TRAVIS_TAG
 - cp dist/bundle.js.map deploy/$TRAVIS_TAG
-- cp index.html deploy/$TRAVIS_TAG
 deploy:
   provider: s3
   access_key_id: AKIAJH2D5IPIRHYJT5IA
