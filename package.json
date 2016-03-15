@@ -1,11 +1,11 @@
 {
   "name": "flow-json-schema-editor",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "edit flow-json schemas",
   "main": "index.js",
   "scripts": {
     "start": "node dev-server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"No test specified, but you good bruh\""
   },
   "repository": {
     "type": "git",
