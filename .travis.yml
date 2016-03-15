@@ -1,0 +1,25 @@
+language: node_js
+node_js:
+- '0.11'
+- '0.10'
+before_deploy:
+- ./node_modules/webpack/bin/webpack.js --config webpack.config.prod.js
+- mkdir -p deploy/latest
+- mkdir -p deploy/$TRAVIS_TAG
+- cp dist/. deploy/latest
+- cp index.html deploy/latest
+- cp dist/. deploy/$TRAVIS_TAG
+- cp index.html deploy/$TRAVIS_TAG
+deploy:
+  provider: s3
+  access_key_id: AKIAJH2D5IPIRHYJT5IA
+  secret_access_key:
+    secure: Dk121/EuZ6g2ccHV/8YWd/8/Q/qleAWj9J93ZvaCpRq//BSYJUafWO5tNZxGbrmMqtVJEhs155BaY9TgtFF5hMlhVQZwHSFQDAwic/mI5iP2UhFQlkttq7+xkxMCtBHp+BSBPIClXLRK1GeI9fT7o+62DAfjmBGBo6Ep+BGlTBI7JxA32nmE3oOabm+3d0Jgo0HAT+HVge4QjwpfHsgsrSZjeDBbpP6AxvInNl4f83l1sBq45Cgi7J0VmTv6kyGN5NtysO8VOXXrvBnkocr34mBHk1HjrkEECUFd/Q/BxKdAlgToVM66BsD/SBhlLcQkoGvVW5lZcZorz00wfoZJFP1bSNoqbiZ+E6IzayXyLLF3htB6HY4IM7QDqLwROWPcrUFCtdwqxbciXy4xJ3n/btkf6YBwHKhAy3QuHo4p/6dYxEvqLK+pF5xZtMGSpB//KswpZ7KCMThRbROUs+3NMStmVqj02ymMxdNiO/sTWVP+1f4C3elSqrM9mSweRZa9beKyH7HjBrpSV5RMqDTlOOxHbvRj3Tjh82YdewCudjW0GGAra/ldrYByq8sqfoaOTavXZBj/5HK0mjhaJ3OHk2aW9FKFe+TnzR58M+vVLfoYhFfNvr9NEU+HLnUGPwewAxtfYxH8KV99drdOjgOeP0C5mRCR7L3u93XNR5iJmFA=
+  bucket: schema-editor.octoblu.com
+  region: us-west-2
+  local-dir: deploy
+  on:
+    tags: true
+    all_branches: true
+  api_key:
+    secure: YOkeYoFMghXa7ab5k+zg+/mGoY98YX01euizgFIsUXX0e09kyBA8LftmjHQOvtI51eXtNfRH8KXbA5SjNR1x7zg1BfxNx9PLD4BRAUXY1kQ8K9BrgVGoevT5pTevA2jB7eBmYra9yo0RQHgf8vRD0xg0+Z93lIFdjj6CidRZ4T/9M9iClWj+vq+spNu2oZ/oZ3NYq3z4tsFELekjeQRD2Z0WqY5eUohindozV40svleY9vdq2rutlq4Z+KhSlji903mT1/Z96RKjYHt7fGRuRoLDRygLvz6HKVj6QGCDiu8z3McOZAKBD8sKXGAoWDzrLTJu7ntsJWND9RctDRFAdCrOZgV3rnUnfNde4B41kzdazZ1Yo4+R0uUxqHhc4jotxdZdPXKaK01iUZa3ggY2HS+1eMhASY8d/vix+wAL639SV1ewL4u/bV2ZWsTTiwVmvIwLk+vb9MG81ZRFcPuLR8OJfwT1KeJyAQsfeHP1/qa1dTF/t/3Dgc/hcjg6qDBzIRKJPQOZGdtwazTnqd2YJRPBWmmHRssOpfy1P91IkCgEPGhcOwIi8r2PCAViClNNLo9L58TPNpvZzklmrv1zc6pYfr6o6hk6qtO0gL3sCPtlKxjTAI3YH5cGbCe6KTYQjGVMNdx5MgnQ6PsIkgkEeZsoacF8C3fS+z9VXa4bjGc=
