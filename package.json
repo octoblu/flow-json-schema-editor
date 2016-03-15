@@ -1,11 +1,11 @@
 {
   "name": "flow-json-schema-editor",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "edit flow-json schemas",
   "main": "index.js",
   "scripts": {
     "start": "node dev-server.js",
-    "build": "webpack --config webpack.config.prod.js",
+    "build": "env NODE_ENV=production webpack --config webpack.config.prod.js",
     "test": "echo \"No test specified, but you good bruh\""
   },
   "repository": {
