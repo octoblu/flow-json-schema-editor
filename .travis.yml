@@ -4,8 +4,9 @@ node_js:
 - '0.10'
 before_deploy:
 - webpack --config webpack.config.prod.js
-- mkdir -p deploy/latest
+- mkdir -p deploy/dist
 - mkdir -p deploy/$TRAVIS_TAG
+- cp index.html deploy
 - cp dist/bundle.js deploy/dist
 - cp dist/bundle.js.map deploy/dist
 - cp dist/bundle.js deploy/$TRAVIS_TAG
