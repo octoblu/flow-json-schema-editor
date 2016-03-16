@@ -1,6 +1,6 @@
 {
   "name": "flow-json-schema-editor",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "edit flow-json schemas",
   "main": "index.js",
   "scripts": {
