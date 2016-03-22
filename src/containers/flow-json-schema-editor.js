@@ -62,9 +62,20 @@ export default class FlowJsonSchemaEditor extends Component {
   render() {
     const { flowData, displaySchema, schemaData, error } = this.state
 
+    const uiSchema = {
+      0: {
+        classNames: "mdl-textfield mdl-js-textfield",
+        topic: {
+          classNames: "mdl-textfield__input"
+        }
+      }
+    }
+    console.log(displaySchema)
+
     let jsonSchemaForm = null
     if (displaySchema && !error) {
       jsonSchemaForm = <JsonSchemaForm
+        uiSchema={uiSchema}
         schema={displaySchema}
         formData={schemaData}
         onChange={this.handleSchemaChange}/>
